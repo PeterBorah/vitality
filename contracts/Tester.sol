@@ -1,4 +1,3 @@
-import "VObject.sol";
 import "VObjectFactory.sol";
 
 contract Tester {
@@ -10,9 +9,9 @@ contract Tester {
   }
 
   function test(uint[] bytecode) {
-    VObject obj = factory.create();
+    VObject obj = factory.create(VObject(0));
 
     result = 0; // Just for paranoia, clear the result.
-    result = obj.exec(bytecode);
+    result = obj.doMessage(bytecode);
   }
 }

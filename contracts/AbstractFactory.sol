@@ -1,3 +1,3 @@
 contract AbstractFactory {
-  function create() returns(address);
+  function create(address) returns(address);
 }

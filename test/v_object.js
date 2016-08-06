@@ -54,14 +54,27 @@ contract('VObject', function(accounts) {
   });
 
   it("can set slots", function(done) {
-    code = "setSlot(bestNumber, 0x17) bestNumber";
+    code = "setSlot(bestNumber, theAnswer) bestNumber";
     bytecode = parser.parse(code);
     tester = Tester.deployed();
 
     tester.test(bytecode).
       then(function() { return tester.result() }).
       then(function(result) {
-        assert.equal(result, 23);
+        assert.equal(result, 42);
+        done();
+      }).catch(done);
+  });
+
+  it("sets prototype of clone", function(done) {
+    code = "setSlot(bestNumber, theAnswer) clone bestNumber";
+    bytecode = parser.parse(code);
+    tester = Tester.deployed();
+
+    tester.test(bytecode).
+      then(function() { return tester.result() }).
+      then(function(result) {
+        assert.equal(result, 42);
         done();
       }).catch(done);
   });

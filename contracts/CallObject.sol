@@ -1,5 +1,12 @@
+import "AbstractVObject.sol";
+
 contract CallObject {
   uint[][] public args;
+  AbstractVObject public sender;
+
+  function CallObject() {
+    sender = AbstractVObject(msg.sender);
+  }
 
   function argNum() returns(uint) {
     return args.length;
@@ -15,5 +22,9 @@ contract CallObject {
 
   function addToArg(uint index, uint element) {
     args[index].push(element);
+  }
+
+  function evalArgAt(uint index) returns(address) {
+    return sender.doMessage(args[index]);
   }
 }
