@@ -7,12 +7,20 @@ contract('Parser', function(accounts) {
     assert.deepEqual(parser.tokenize(code), expected);
   });
 
-  it("Can get an intermediate representation", function() {
+  xit("Can get a list of identifiers", function() {
     code = "setSlot('doublePlusOne', method(x, 1 +(x, x)))";
-    expected = [{type: "identifier", value: "setSlot"}, {type: "argNumber", value: 2}, {type: "argSize", value: 1}, {type: "argSize", value: 12},
-      {type: "string", value: "doublePlusOne"}, {type: "identifier", value: "method"}, {type: "argNumber", value: 2}, {type: "argSize", value: 1},
-      {type: "argSize", value: 7}, {type: "identifier", value: "x"}, {type: "number", value: 1}, {type: "identifier", value: "+"},
-      {type: "argNumber", value: 2}, {type: "argSize", value: 1}, {type: "argSize", value: 1}, {type: "identifier", value: "x"}, {type: "identifier", value: "x"}]
-    assert.deepEqual(parser.getIntermediate(parser.tokenize(code)), expected);
+    intermediate = parser.getIntermediate(parser.tokenize(code));
+    console.log(intermediate);
+  });
+
+  xit("Can turn it into bytecode", function() {
+    code = "setSlot('doublePlusOne', method(x, 1 +(x, x)))";
+    intermediate = parser.getIntermediate(parser.tokenize(code));
+    console.log(parser.getBytecode(intermediate));
+  });
+
+  xit("Can do the whole thing", function() {
+    code = "setSlot('doublePlusOne', method(x, 1 +(x, x)))";
+    console.log(parser.parse(code));
   });
 });
