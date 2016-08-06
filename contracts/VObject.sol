@@ -1,21 +1,16 @@
 import "CallObject.sol";
 import "AbstractFactory.sol";
-import "Mul.sol";
-import "SlotSetter.sol";
 
 contract VObject {
   mapping (uint => address) slots;
   AbstractFactory factory;
-  SlotSetter slotSetter;
 
   function VObject() {
     factory = AbstractFactory(msg.sender);
-    slotSetter = new SlotSetter();
 
     // Temporary for testing.
     slots[0x746865416e73776572] = 42; // theAnswer
     slots[0x616e4f626a656374] = this; // anObject
-    slots[0x6d756c] = new Mul(); // mul
   }
   
   function setSlot(uint name, address target) {
@@ -57,25 +52,39 @@ contract VObject {
   function invoke(CallObject callObj) returns(address) {
   }
 
-  function getSlot(uint message) returns(address) {
-    // Clone
-    if (message == 0x636c6f6e65) {
-      return VObject(factory.create());
-    }
-
+  function processMessage(uint message, CallObject callObj) returns(address) {
+    // setSlot
     if (message == 0x736574536c6f74) {
-      return slotSetter;
+      return _setSlot(callObj);
     }
 
-    // otherwise
-    return slots[message];
+    // mul
+    if (message == 0x6d756c) {
+      return _mul(callObj);
+    }
+
+    // clone
+    if (message == 0x636c6f6e65) {
+      return _clone(callObj);
+    }
+
+    if (callObj.argNum() == 0) {
+      return slots[message];
+    } else {
+      return VObject(slots[message]).invoke(callObj);
+    }
   }
 
-  function processMessage(uint message, CallObject callObj) returns(address) {
-    if (callObj.argNum() == 0) {
-      return getSlot(message);
-    } else {
-      return VObject(getSlot(message)).invoke(callObj);
-    }
+  function _setSlot(CallObject callObj) private returns(address) {
+    slots[callObj.args(0,0)] = address(callObj.args(1,0));
+    return this;
+  }
+
+  function _mul(CallObject callObj) private returns(address) {
+    return address(callObj.args(0,0) * callObj.args(1,0));
+  }
+
+  function _clone(CallObject callObj) private returns(address) {
+    return VObject(factory.create());
   }
 }
