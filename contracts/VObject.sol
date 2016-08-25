@@ -11,7 +11,6 @@ contract VObject {
     proto = _proto;
 
     // Temporary for testing.
-    slots[0x746865416e73776572] = 42; // theAnswer
     slots[0x616e4f626a656374] = this; // anObject
   }
   
@@ -63,11 +62,6 @@ contract VObject {
     // setSlot
     if (message == 0x736574536c6f74) {
       return _setSlot(callObj);
-    }
-
-    // mul
-    if (message == 0x6d756c) {
-      return _mul(callObj);
     }
 
     // clone
