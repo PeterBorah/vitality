@@ -78,4 +78,20 @@ contract('VObject', function(accounts) {
         done();
       }).catch(done);
   });
+
+  it("can handle numbers", function(done) {
+    code = "4";
+    bytecode = parser.parse(code);
+    tester = Tester.deployed();
+    var num;
+
+    tester.test(bytecode).
+      then(function() { return tester.result() }).
+      then(function(result) { num = VObject.at(result); }).
+      then(function() { return num.rawValue(); }).
+      then(function(result) {
+        assert.equal(result, 4);
+        done();
+      }).catch(done);
+  });
 });

@@ -5,13 +5,16 @@ contract VObject {
   mapping (uint => address) slots;
   AbstractFactory factory;
   VObject proto;
+  CallObject emptyCallObject;
 
-  function VObject(VObject _proto) {
-    factory = AbstractFactory(msg.sender);
+  function VObject(VObject _proto, AbstractFactory _factory) {
+    factory = _factory;
     proto = _proto;
+    emptyCallObject = new CallObject();
+  }
 
-    // Temporary for testing.
-    slots[0x616e4f626a656374] = this; // anObject
+  function rawValue() constant returns(address) {
+    return processMessage(0x72617756616c7565, emptyCallObject);
   }
   
   function setSlot(uint name, address target) {
@@ -82,16 +85,12 @@ contract VObject {
     }
   }
 
-  function _setSlot(CallObject callObj) private returns(address) {
+  function _setSlot(CallObject callObj) returns(address) {
     slots[callObj.args(0,0)] = address(callObj.evalArgAt(1));
     return this;
   }
 
-  function _mul(CallObject callObj) private returns(address) {
-    return address(callObj.args(0,0) * callObj.args(1,0));
-  }
-
-  function _vclone(CallObject callObj) private returns(address) {
+  function _vclone(CallObject callObj) returns(address) {
     return VObject(factory.create(this));
   }
 }

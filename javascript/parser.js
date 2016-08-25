@@ -34,7 +34,7 @@ module.exports = {
         list.push({type: "identifier", value: "new" })
         list.push({type: "argNumber", value: 1});
         list.push({type: "argSize", value: 2});
-        list.push({type: "identifier", value: token })
+        list.push({type: "identifier", value: parseInt(token) })
         list.push({type: "argNumber", value: 0});
         return this.getIntermediate(tokens, list, size + 7);
       } else if (token === ")") {
