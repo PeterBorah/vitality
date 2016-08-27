@@ -1,5 +1,6 @@
 var parser = require("../javascript/parser.js");
 
+// Use testrpc's -l flag to set a high enough gas limit.
 contract('VObject', function(accounts) {
   it("can process a single message", function(done) {
     code = "theAnswer";
@@ -7,7 +8,7 @@ contract('VObject', function(accounts) {
     tester = Tester.deployed();
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -21,7 +22,7 @@ contract('VObject', function(accounts) {
     tester = Tester.deployed();
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -35,7 +36,7 @@ contract('VObject', function(accounts) {
     tester = Tester.deployed();
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -49,7 +50,7 @@ contract('VObject', function(accounts) {
     tester = Tester.deployed();
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 6);
@@ -63,7 +64,7 @@ contract('VObject', function(accounts) {
     tester = Tester.deployed();
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -77,7 +78,7 @@ contract('VObject', function(accounts) {
     tester = Tester.deployed();
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -92,7 +93,7 @@ contract('VObject', function(accounts) {
     var num;
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) { num = VObject.at(result); }).
       then(function() { return num.rawValue(); }).
@@ -109,7 +110,7 @@ contract('VObject', function(accounts) {
     var num;
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) { num = VObject.at(result); }).
       then(function() { return num.rawValue(); }).
@@ -126,7 +127,7 @@ contract('VObject', function(accounts) {
     var num;
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) { num = VObject.at(result); }).
       then(function() { return num.rawValue(); }).
@@ -143,7 +144,7 @@ contract('VObject', function(accounts) {
     var num;
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) { num = VObject.at(result); }).
       then(function() { return num.rawValue(); }).
@@ -160,7 +161,7 @@ contract('VObject', function(accounts) {
     var num;
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) { num = VObject.at(result); }).
       then(function() { return num.rawValue(); }).
@@ -171,18 +172,18 @@ contract('VObject', function(accounts) {
   });
 
   it("can add nested numbers", function(done) {
-    code = "4 +(3 +(2 +(1)))";
+    code = "5 +(4 +(3 +(2 +(1))))";
     bytecode = parser.parse(code);
     tester = Tester.deployed();
     var num;
 
     tester.prepare().
-      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.test(bytecode, {gas: 99999999}) }).
       then(function() { return tester.result() }).
       then(function(result) { num = VObject.at(result); }).
       then(function() { return num.rawValue(); }).
       then(function(result) {
-        assert.equal(result, 10);
+        assert.equal(result, 15);
         done();
       }).catch(done);
   });
