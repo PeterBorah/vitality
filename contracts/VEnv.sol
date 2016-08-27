@@ -6,7 +6,7 @@ contract VEnv is VObject {
     // temporary for testing
     slots[0x616e4f626a656374] = this; // anObject
     slots[0x746865416e73776572] = 42; // theAnswer
-    slots[0x4e756d626572] = new VNumber(factory); // Number
+    slots[0x4e756d626572] = new VNumber(this, factory); // Number
   }
 
   function processMessage(uint message, CallObject callObj) returns(address) {

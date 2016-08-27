@@ -6,7 +6,8 @@ contract('VObject', function(accounts) {
     bytecode = parser.parse(code);
     tester = Tester.deployed();
 
-    tester.test(bytecode).
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -19,7 +20,8 @@ contract('VObject', function(accounts) {
     bytecode = parser.parse(code);
     tester = Tester.deployed();
 
-    tester.test(bytecode).
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -32,7 +34,8 @@ contract('VObject', function(accounts) {
     bytecode = parser.parse(code);
     tester = Tester.deployed();
 
-    tester.test(bytecode).
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -45,7 +48,8 @@ contract('VObject', function(accounts) {
     bytecode = parser.parse(code);
     tester = Tester.deployed();
 
-    tester.test(bytecode).
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 6);
@@ -58,7 +62,8 @@ contract('VObject', function(accounts) {
     bytecode = parser.parse(code);
     tester = Tester.deployed();
 
-    tester.test(bytecode).
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -71,7 +76,8 @@ contract('VObject', function(accounts) {
     bytecode = parser.parse(code);
     tester = Tester.deployed();
 
-    tester.test(bytecode).
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
       then(function() { return tester.result() }).
       then(function(result) {
         assert.equal(result, 42);
@@ -85,12 +91,47 @@ contract('VObject', function(accounts) {
     tester = Tester.deployed();
     var num;
 
-    tester.test(bytecode).
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
       then(function() { return tester.result() }).
       then(function(result) { num = VObject.at(result); }).
       then(function() { return num.rawValue(); }).
       then(function(result) {
         assert.equal(result, 4);
+        done();
+      }).catch(done);
+  });
+
+  it("can add numbers", function(done) {
+    code = "4 +(7)";
+    bytecode = parser.parse(code);
+    tester = Tester.deployed();
+    var num;
+
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.result() }).
+      then(function(result) { num = VObject.at(result); }).
+      then(function() { return num.rawValue(); }).
+      then(function(result) {
+        assert.equal(result, 11);
+        done();
+      }).catch(done);
+  });
+
+  xit("can add nested numbers", function(done) {
+    code = "4 +(3 +(2))";
+    bytecode = parser.parse(code);
+    tester = Tester.deployed();
+    var num;
+
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.result() }).
+      then(function(result) { num = VObject.at(result); }).
+      then(function() { return num.rawValue(); }).
+      then(function(result) {
+        assert.equal(result, 9);
         done();
       }).catch(done);
   });
