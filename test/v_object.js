@@ -102,6 +102,23 @@ contract('VObject', function(accounts) {
       }).catch(done);
   });
 
+  it("can set slots to numbers", function(done) {
+    code = "setSlot(result, 4) result";
+    bytecode = parser.parse(code);
+    tester = Tester.deployed();
+    var num;
+
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.result() }).
+      then(function(result) { num = VObject.at(result); }).
+      then(function() { return num.rawValue(); }).
+      then(function(result) {
+        assert.equal(result, 4);
+        done();
+      }).catch(done);
+  });
+
   it("can add numbers", function(done) {
     code = "4 +(7)";
     bytecode = parser.parse(code);
@@ -119,8 +136,8 @@ contract('VObject', function(accounts) {
       }).catch(done);
   });
 
-  xit("can add nested numbers", function(done) {
-    code = "4 +(3 +(2))";
+  it("can add things that aren't just literals", function(done) {
+    code = "4 +(anObject 5)";
     bytecode = parser.parse(code);
     tester = Tester.deployed();
     var num;
@@ -132,6 +149,40 @@ contract('VObject', function(accounts) {
       then(function() { return num.rawValue(); }).
       then(function(result) {
         assert.equal(result, 9);
+        done();
+      }).catch(done);
+  });
+
+  it("can set slots to addition", function(done) {
+    code = "setSlot(result, 4 +(3)) result";
+    bytecode = parser.parse(code);
+    tester = Tester.deployed();
+    var num;
+
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.result() }).
+      then(function(result) { num = VObject.at(result); }).
+      then(function() { return num.rawValue(); }).
+      then(function(result) {
+        assert.equal(result, 7);
+        done();
+      }).catch(done);
+  });
+
+  it("can add nested numbers", function(done) {
+    code = "4 +(3 +(2 +(1)))";
+    bytecode = parser.parse(code);
+    tester = Tester.deployed();
+    var num;
+
+    tester.prepare().
+      then(function() { return tester.test(bytecode) }).
+      then(function() { return tester.result() }).
+      then(function(result) { num = VObject.at(result); }).
+      then(function() { return num.rawValue(); }).
+      then(function(result) {
+        assert.equal(result, 10);
         done();
       }).catch(done);
   });

@@ -1,21 +1,26 @@
-import "CallObject.sol";
 import "AbstractFactory.sol";
 import "AbstractVObject.sol";
+import "AbstractCallObject.sol";
 
 contract VObject {
   mapping (uint => address) slots;
   AbstractFactory factory;
   VObject proto;
-  CallObject emptyCallObject;
 
-  function VObject(VObject _proto, AbstractFactory _factory) {
-    factory = _factory;
+  function initialize(VObject _proto, AbstractFactory _factory) { 
     proto = _proto;
-    emptyCallObject = new CallObject(AbstractVObject(this));
+    factory = _factory;
   }
 
   function rawValue() constant returns(address) {
-    return processMessage(0x72617756616c7565, emptyCallObject);
+    address local = slots[0x72617756616c7565];
+    if (local != 0) {
+      return local;
+    } else if (proto != address(0)) {
+      return proto.rawValue();
+    } else {
+      return 0;
+    }
   }
   
   function setSlot(uint name, address target) {
@@ -29,7 +34,6 @@ contract VObject {
     uint message;
     uint argNum;
     uint length;
-    uint[] memory arg;
     uint i;
     uint j;
 
@@ -41,7 +45,7 @@ contract VObject {
       i = 0;
       j = 0;
 
-      CallObject callObj = new CallObject(AbstractVObject(target));
+      AbstractCallObject callObj = AbstractCallObject(factory.createCallObject(AbstractVObject(target)));
       callObj.setArgNum(argNum);
 
       for(i = 0; i < argNum; i++) {
@@ -60,10 +64,10 @@ contract VObject {
     return target;
   }
 
-  function invoke(CallObject callObj) returns(address) {
+  function invoke(AbstractCallObject callObj) returns(address) {
   }
 
-  function processMessage(uint message, CallObject callObj) returns(address) {
+  function processMessage(uint message, AbstractCallObject callObj) returns(address) {
     // setSlot
     if (message == 0x736574536c6f74) {
       return _setSlot(callObj);
@@ -90,12 +94,12 @@ contract VObject {
     }
   }
 
-  function _setSlot(CallObject callObj) returns(address) {
+  function _setSlot(AbstractCallObject callObj) returns(address) {
     slots[callObj.args(0,0)] = address(callObj.evalArgAt(1));
     return this;
   }
 
-  function _vclone(CallObject callObj) returns(address) {
+  function _vclone(AbstractCallObject callObj) returns(address) {
     return VObject(factory.create(this));
   }
 }

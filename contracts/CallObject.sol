@@ -1,13 +1,14 @@
 import "AbstractVObject.sol";
 
 contract CallObject {
+  address destination;
   uint[][] public args;
   AbstractVObject public sender;
   AbstractVObject public target;
 
-  function CallObject(AbstractVObject _target) {
+  function initialize(AbstractVObject _target, AbstractVObject _sender) {
     target = _target;
-    sender = AbstractVObject(msg.sender);
+    sender = _sender;
   }
 
   function argNum() returns(uint) {

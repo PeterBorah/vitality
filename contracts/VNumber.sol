@@ -1,10 +1,12 @@
 import "VObject.sol";
 
 contract VNumber is VObject {
-  function VNumber(VObject _proto, AbstractFactory _factory) VObject(_proto, _factory) {
+  function VNumber(VObject _proto, AbstractFactory _factory) {
+    proto = _proto;
+    factory = _factory;
   }
 
-  function processMessage(uint message, CallObject callObj) returns(address) {
+  function processMessage(uint message, AbstractCallObject callObj) returns(address) {
     // new
     if (message == 0x6e6577) {
       return _new(callObj);
@@ -19,11 +21,11 @@ contract VNumber is VObject {
     return super.processMessage(message, callObj);
   }
 
-  function _new(CallObject callObj) returns(address) {
+  function _new(AbstractCallObject callObj) returns(address) {
     return _createNewNumber(callObj.args(0,0));
   }
 
-  function _plus(CallObject callObj) returns(address) {
+  function _plus(AbstractCallObject callObj) returns(address) {
     VObject first = VObject(callObj.target());
     VObject second = VObject(callObj.evalArgAt(0));
 
